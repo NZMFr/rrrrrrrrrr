@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Slaorus Mini</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="moonGlow"></div>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="brand">
+    <svg class="moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b9aef0"/>
+      </linearGradient></defs>
+      <path fill="url(#mg)" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+    </svg>
+    <span class="brand-name" id="brandName">Slaorus Mini</span>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-ico" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+      <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+        d="M11 4a7 7 0 1 0 4.9 12L20 20"/><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/>
+    </svg>
+    <input id="search" type="text" placeholder="Search games" autocomplete="off" />
+  </div>
+
+  <div class="top-actions">
+    <button id="randomBtn" class="icon-btn" title="Random game">
+      <svg viewBox="0 0 24 24" width="19" height="19"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="8.2" cy="8.2" r="1.5" fill="currentColor"/><circle cx="15.8" cy="15.8" r="1.5" fill="currentColor"/>
+      <circle cx="15.8" cy="8.2" r="1.5" fill="currentColor"/><circle cx="8.2" cy="15.8" r="1.5" fill="currentColor"/></svg>
+    </button>
+    <button id="statsBtn" class="icon-btn" title="Stats">
+      <svg viewBox="0 0 24 24" width="19" height="19"><path fill="currentColor" d="M4 20V10h3.4v10H4zm6.3 0V4h3.4v16h-3.4zm6.3 0v-7H20v7h-3.4z"/></svg>
+    </button>
+    <button id="settingsBtn" class="icon-btn" title="Settings">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor">
+        <path d="M12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 0 0 12 8.5zm9.5 5.1c.02-.53.02-1.07 0-1.6l2-1.6-2-3.4-2.4 1a8.6 8.6 0 0 0-2.7-1.6L15.8 3h-4l-.4 2.6a8.6 8.6 0 0 0-2.7 1.6l-2.4-1-2 3.4 2 1.6a9.2 9.2 0 0 0 0 1.6l-2 1.6 2 3.4 2.4-1a8.6 8.6 0 0 0 2.7 1.6l.4 2.6h4l.4-2.6a8.6 8.6 0 0 0 2.7-1.6l2.4 1 2-3.4-2.1-1.6z" opacity=".95"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<nav id="chips" class="chips"></nav>
+
+<main id="library"></main>
+
+<!-- ================= GAME PLAYER ================= -->
+<div id="player" class="player hidden">
+  <div class="player-bar">
+    <div class="player-title"><span id="playerName"></span><span id="playerBy" class="player-by"></span></div>
+    <div class="player-actions">
+      <span id="playerClock" class="player-clock">
+        <svg viewBox="0 0 24 24" width="13" height="13"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span id="clockText">0s</span>
+      </span>
+      <button id="fsBtn" class="pbtn">Fullscreen</button>
+      <button id="tabBtn" class="pbtn">New tab</button>
+      <button id="closeBtn" class="pbtn danger">Close</button>
+    </div>
+  </div>
+  <iframe id="playerFrame" src="about:blank" allowfullscreen
+    sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-forms"></iframe>
+</div>
+
+<!-- ================= STATS MODAL ================= -->
+<div id="statsModal" class="modal hidden">
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M4 20V10h3.4v10H4zm6.3 0V4h3.4v16h-3.4zm6.3 0v-7H20v7h-3.4z"/></svg>
+      <h2>Stats</h2>
+    </div>
+    <div id="statsBody"></div>
+    <button class="big-btn ghost closeModal" style="margin-top:18px">Close</button>
+  </div>
+</div>
+
+<!-- ================= SETTINGS MODAL ================= -->
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path fill="#e8e6ff" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+      </svg>
+      <h2>Settings</h2>
+    </div>
+    <p class="modal-sub">Adjust the launcher. Reopen any time with the gear.</p>
+
+    <div class="setting-label">GAME LIBRARY</div>
+    <div class="lib-tabs">
+      <button class="lib-tab" data-lib="gnmath">
+        <span class="lib-name">gnmath</span><span class="lib-sub">more known library</span>
+      </button>
+      <button class="lib-tab" data-lib="lumin">
+        <span class="lib-name">Lumin</span><span class="lib-sub">bigger game library</span>
+      </button>
+    </div>
+
+    <div class="setting-label">ACCENT</div>
+    <div class="accent-row">
+      <div id="accentCurrent" class="accent-current" title="Custom color"></div>
+      <div id="accentPills" class="accent-pills"></div>
+    </div>
+
+    <!-- custom color picker popup -->
+    <div id="picker" class="picker hidden">
+      <div class="picker-top">
+        <canvas id="pickCanvas" width="260" height="150"></canvas>
+        <div id="pickHandle" class="pick-handle"></div>
+      </div>
+      <div class="picker-bottom">
+        <button id="eyedropBtn" class="eyedrop" title="Pick from screen">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor"
+            d="M12 2s6.5 6.6 6.5 11a6.5 6.5 0 1 1-13 0C5.5 8.6 12 2 12 2z"/></svg>
+        </button>
+        <div class="hue-wrap">
+          <div id="hueTrack" class="hue-track"><div id="hueHandle" class="hue-handle"></div></div>
+        </div>
+      </div>
+      <div class="rgb-row">
+        <div class="rgb-box"><input id="rVal" type="number" min="0" max="255" /><span>R</span></div>
+        <div class="rgb-box"><input id="gVal" type="number" min="0" max="255" /><span>G</span></div>
+        <div class="rgb-box"><input id="bVal" type="number" min="0" max="255" /><span>B</span></div>
+      </div>
+    </div>
+
+    <div class="setting-label">OPTIONS</div>
+    <div class="opt-row">
+      <div><div class="opt-name">Open games in a blank tab</div><div class="opt-sub">Cloak: launches into an about:blank tab.</div></div>
+      <label class="switch"><input id="cloakToggle" type="checkbox" /><span class="knob"></span></label>
+    </div>
+    <div class="opt-row">
+      <div><div class="opt-name">Ambient effects</div><div class="opt-sub">Moon glow &amp; twinkling stars.</div></div>
+      <label class="switch"><input id="fxToggle" type="checkbox" checked /><span class="knob"></span></label>
+    </div>
+
+    <button id="saveSettings" class="big-btn">Save</button>
+    <button class="big-btn ghost closeModal">Close</button>
+  </div>
+</div>
+
+<script src="games.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
