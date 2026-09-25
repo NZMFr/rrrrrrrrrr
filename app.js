@@ -6,7 +6,7 @@
    ========================================================= */
 "use strict";
 
-const BRAND = "Slaorus Mini"; // <-- site name lives here (one line)
+const BRAND = "Solaris Mini"; // <-- site name lives here (one line)
 
 /* ---------- storage ---------- */
 const store = {
